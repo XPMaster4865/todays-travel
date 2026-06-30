@@ -80,14 +80,19 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-6">
             {[
               {
-                icon: "🚌",
-                title: "Authentic Fleet",
-                desc: "Double-decker buses with custom Todays Travel liveries, faithfully recreated in Roblox.",
+                icon: "🤝",
+                title: "Our Community",
+                desc: "With over 80 members and growing, Todays Travel is built on a foundation of warmth and inclusion. Everyone is welcome — whether you're a seasoned driver or just starting out.",
               },
               {
-                icon: "🗺️",
-                title: "Real Routes",
-                desc: "Routes inspired by real Croydon bus services, covering key landmarks across the map.",
+                icon: "🎉",
+                title: "Fun Initiatives",
+                desc: "From our Driver of the Week programme to organised driving lessons, there's always something going on. We make sure every member has something to look forward to.",
+              },
+              {
+                icon: "🏛️",
+                title: "Clear Structure",
+                desc: "Our hierarchy is simple and transparent — Driver, Moderator, Co-owner, and Owner. Our moderation team acts quickly and fairly, so you can always expect a well-run experience.",
               },
             ].map((f) => (
               <div
