@@ -2,30 +2,35 @@ const staff = [
   {
     name: "Lucas",
     username: "@luketaylor0378",
+    id: "1238906611045634058",
     avatar: "/staff/lucas.png",
     roles: ["Owner"],
   },
   {
     name: "Leo",
     username: "@leo20215022",
+    id: "800072537924304927",
     avatar: "/staff/leo.png",
     roles: ["Co-Owner", "Moderator"],
   },
   {
     name: "Jack",
     username: "@ducklover200._36574",
+    id: "1468280480276156669",
     avatar: "/staff/jack.png",
     roles: ["Moderator", "Head of Media"],
   },
   {
     name: "XPMaster",
     username: "@xpmaster4865",
+    id: "1441881068478267492",
     avatar: "/staff/xpmaster.png",
     roles: ["Moderator", "Media"],
   },
   {
     name: "Callum",
     username: "@callum_ptfs",
+    id: "1424028978016161883",
     avatar: "/staff/callum.png",
     roles: ["Media"],
   },
@@ -59,7 +64,14 @@ export default function Staff() {
               className="w-20 h-20 rounded-full object-cover border-2 border-purple-900/40 mb-4"
             />
             <p className="text-lg font-bold text-[#f0eaff]">{person.name}</p>
-            <p className="text-sm text-[#f0eaff]/40 mb-4">{person.username}</p>
+            <a
+              href={`https://discord.com/users/${person.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-[#f0eaff]/40 hover:text-[#c084fc] transition-colors mb-4"
+            >
+              {person.username}
+            </a>
             <div className="flex flex-wrap gap-2 justify-center">
               {person.roles.map((role) => (
                 <span
