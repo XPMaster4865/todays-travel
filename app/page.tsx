@@ -32,7 +32,7 @@ export default function Home() {
 
         <p className="max-w-xl text-lg text-[#f0eaff]/60 mb-10">
           Croydon&apos;s premier bus operator on Roblox. Hop on board and explore the streets of Croydon with our
-          growing fleet of double-deckers.
+          growing fleet of buses.
         </p>
 
         <div className="flex flex-wrap gap-4 justify-center">
