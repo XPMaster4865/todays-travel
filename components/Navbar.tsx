@@ -31,7 +31,7 @@ export default function Navbar() {
             </Link>
           ))}
           <a
-            href="https://discord.gg/placeholder"
+            href="https://discord.gg/zubDeVEUt6"
             target="_blank"
             rel="noopener noreferrer"
             className="px-4 py-2 rounded-lg bg-[#8b3cf7] hover:bg-[#7c3aed] text-white text-sm font-semibold transition-colors"
@@ -66,7 +66,7 @@ export default function Navbar() {
             </Link>
           ))}
           <a
-            href="https://discord.gg/placeholder"
+            href="https://discord.gg/zubDeVEUt6"
             target="_blank"
             rel="noopener noreferrer"
             className="px-4 py-2 rounded-lg bg-[#8b3cf7] text-white text-sm font-semibold text-center"

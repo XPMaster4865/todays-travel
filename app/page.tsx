@@ -33,7 +33,7 @@ export default function Home() {
 
         <div className="flex flex-wrap gap-4 justify-center">
           <a
-            href="https://discord.gg/placeholder"
+            href="https://discord.gg/zubDeVEUt6"
             target="_blank"
             rel="noopener noreferrer"
             className="px-6 py-3 rounded-xl bg-[#8b3cf7] hover:bg-[#7c3aed] text-white font-semibold transition-colors"
@@ -112,7 +112,7 @@ export default function Home() {
             Connect with other drivers, get route updates, and stay in the loop on new fleet additions.
           </p>
           <a
-            href="https://discord.gg/placeholder"
+            href="https://discord.gg/zubDeVEUt6"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block px-8 py-3 rounded-xl bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold transition-colors"
