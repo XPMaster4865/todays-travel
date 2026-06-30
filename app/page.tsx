@@ -6,9 +6,13 @@ import HeroBackground from "@/components/HeroBackground";
 export default function Home() {
   const liveriesDir = path.join(process.cwd(), "public", "liveries");
   const images = fs
-    .readdirSync(liveriesDir)
-    .filter((f) => /\.(png|jpe?g|webp)$/i.test(f))
-    .map((f) => `/liveries/${f}`);
+    .readdirSync(liveriesDir, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .flatMap((d) =>
+      fs.readdirSync(path.join(liveriesDir, d.name))
+        .filter((f) => /\.(png|jpe?g|webp)$/i.test(f))
+        .map((f) => `/liveries/${d.name}/${f}`)
+    );
 
   return (
     <>
