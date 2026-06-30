@@ -1,12 +1,20 @@
 import Link from "next/link";
+import fs from "fs";
+import path from "path";
 import HeroBackground from "@/components/HeroBackground";
 
 export default function Home() {
+  const liveriesDir = path.join(process.cwd(), "public", "liveries");
+  const images = fs
+    .readdirSync(liveriesDir)
+    .filter((f) => /\.(png|jpe?g|webp)$/i.test(f))
+    .map((f) => `/liveries/${f}`);
+
   return (
     <>
       {/* Hero */}
       <section className="relative overflow-hidden flex flex-col items-center justify-center text-center min-h-[90vh] px-4 py-24">
-        <HeroBackground />
+        <HeroBackground images={images} />
 
         <div className="inline-flex items-center gap-2 bg-[#8b3cf7]/20 border border-[#8b3cf7]/40 rounded-full px-4 py-1.5 text-sm text-[#c084fc] mb-6">
           <span className="w-2 h-2 rounded-full bg-[#2dd4bf] animate-pulse" />
