@@ -53,7 +53,7 @@ export default function Home() {
       <section className="border-y border-purple-900/30 bg-[#130d24] py-10 px-4">
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[
-            { value: "10+", label: "Bus Routes" },
+            { value: "20+", label: "Custom Routes" },
             { value: "4", label: "Liveries" },
             { value: "Croydon", label: "Operating Area" },
             { value: "Roblox", label: "Platform" },
