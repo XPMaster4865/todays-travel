@@ -23,13 +23,33 @@ export default function FleetCarousel({ groups }: { groups: BusGroup[] }) {
   return (
     <div className="flex flex-col items-center gap-8">
 
-      {/* Vehicle name */}
-      <div className="text-center">
-        <p className="text-2xl font-extrabold text-[#c084fc]">{group.name}</p>
-        <p className="text-xs text-[#f0eaff]/40 mt-1">{groupIndex + 1} of {groups.length} vehicles</p>
+      {/* Vehicle type navigation */}
+      <div className="flex items-center gap-6 w-full max-w-3xl justify-between">
+        <button
+          onClick={prevGroup}
+          className="w-10 h-10 rounded-full bg-[#130d24] border border-purple-900/40 hover:bg-[#8b3cf7]/60 flex items-center justify-center transition-colors shrink-0"
+          aria-label="Previous vehicle"
+        >
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <div className="text-center">
+          <p className="text-2xl font-extrabold text-[#c084fc]">{group.name}</p>
+          <p className="text-xs text-[#f0eaff]/40 mt-1">{groupIndex + 1} of {groups.length} vehicles</p>
+        </div>
+        <button
+          onClick={nextGroup}
+          className="w-10 h-10 rounded-full bg-[#130d24] border border-purple-900/40 hover:bg-[#8b3cf7]/60 flex items-center justify-center transition-colors shrink-0"
+          aria-label="Next vehicle"
+        >
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
 
-      {/* Main image with side arrows */}
+      {/* Main image with livery arrows overlaid */}
       <div className="relative w-full max-w-3xl aspect-video rounded-2xl overflow-hidden border border-purple-900/40 bg-[#130d24]">
         {group.images.map((src, i) => (
           <img
@@ -41,33 +61,31 @@ export default function FleetCarousel({ groups }: { groups: BusGroup[] }) {
           />
         ))}
 
-        {/* Left arrow — previous vehicle */}
-        <button
-          onClick={prevGroup}
-          className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#0f0a1e]/80 border border-purple-900/40 hover:bg-[#8b3cf7]/80 flex items-center justify-center transition-colors"
-          aria-label="Previous vehicle"
-        >
-          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-
-        {/* Right arrow — next vehicle */}
-        <button
-          onClick={nextGroup}
-          className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#0f0a1e]/80 border border-purple-900/40 hover:bg-[#8b3cf7]/80 flex items-center justify-center transition-colors"
-          aria-label="Next vehicle"
-        >
-          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-
-        {/* Image counter */}
+        {/* Livery arrows — only show if multiple images */}
         {group.images.length > 1 && (
-          <div className="absolute bottom-3 right-3 bg-[#0f0a1e]/80 text-xs text-[#f0eaff]/60 px-3 py-1 rounded-full border border-purple-900/30">
-            {imgIndex + 1} / {group.images.length}
-          </div>
+          <>
+            <button
+              onClick={() => setImgIndex((c) => (c - 1 + group.images.length) % group.images.length)}
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#0f0a1e]/80 border border-[#2dd4bf]/40 hover:bg-[#2dd4bf]/30 flex items-center justify-center transition-colors"
+              aria-label="Previous livery"
+            >
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              onClick={() => setImgIndex((c) => (c + 1) % group.images.length)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#0f0a1e]/80 border border-[#2dd4bf]/40 hover:bg-[#2dd4bf]/30 flex items-center justify-center transition-colors"
+              aria-label="Next livery"
+            >
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+            <div className="absolute bottom-3 right-3 bg-[#0f0a1e]/80 text-xs text-[#f0eaff]/60 px-3 py-1 rounded-full border border-purple-900/30">
+              {imgIndex + 1} / {group.images.length}
+            </div>
+          </>
         )}
       </div>
 
