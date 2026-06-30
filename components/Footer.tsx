@@ -6,6 +6,7 @@ export default function Footer() {
           <span className="text-[#c084fc] font-semibold">Todays Travel</span> — Croydon Bus Simulator on Roblox
         </p>
         <p>Not affiliated with any real-world transport operator.</p>
+        <p>Made by <span className="text-[#c084fc] font-semibold">madewithcode</span></p>
       </div>
     </footer>
   );
