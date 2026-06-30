@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 const INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
 
 export default function HeroBackground({ images }: { images: string[] }) {
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(() => Math.floor(Math.random() * images.length));
 
   useEffect(() => {
     if (images.length <= 1) return;
