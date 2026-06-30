@@ -32,20 +32,20 @@ export default function Home() {
         </p>
 
         <div className="flex flex-wrap gap-4 justify-center">
-          <Link
-            href="/routes"
-            className="px-6 py-3 rounded-xl bg-[#8b3cf7] hover:bg-[#7c3aed] text-white font-semibold transition-colors"
-          >
-            View Routes
-          </Link>
           <a
             href="https://discord.gg/placeholder"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-6 py-3 rounded-xl border border-[#2dd4bf]/40 hover:bg-[#2dd4bf]/10 text-[#2dd4bf] font-semibold transition-colors"
+            className="px-6 py-3 rounded-xl bg-[#8b3cf7] hover:bg-[#7c3aed] text-white font-semibold transition-colors"
           >
             Join Discord
           </a>
+          <Link
+            href="/fleet"
+            className="px-6 py-3 rounded-xl border border-[#2dd4bf]/40 hover:bg-[#2dd4bf]/10 text-[#2dd4bf] font-semibold transition-colors"
+          >
+            View Fleet
+          </Link>
         </div>
       </section>
 
