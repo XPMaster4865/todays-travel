@@ -54,7 +54,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[
             { value: "10+", label: "Bus Routes" },
-            { value: "3", label: "Liveries" },
+            { value: "4", label: "Liveries" },
             { value: "Croydon", label: "Operating Area" },
             { value: "Roblox", label: "Platform" },
           ].map((s) => (
