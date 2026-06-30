@@ -6,7 +6,7 @@ export default function Footer() {
           <span className="text-[#c084fc] font-semibold">Todays Travel</span> — Croydon Bus Simulator on Roblox
         </p>
         <p>Not affiliated with any real-world transport operator.</p>
-        <p>Made by <span className="text-[#c084fc] font-semibold">madewithcode</span></p>
+        <p>Made by <a href="https://madewithcode.dev" target="_blank" rel="noopener noreferrer" className="text-[#c084fc] font-semibold hover:text-[#2dd4bf] transition-colors">madewithcode</a></p>
       </div>
     </footer>
   );
