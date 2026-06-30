@@ -89,11 +89,6 @@ export default function Home() {
                 title: "Real Routes",
                 desc: "Routes inspired by real Croydon bus services, covering key landmarks across the map.",
               },
-              {
-                icon: "🎮",
-                title: "Roblox Native",
-                desc: "Built entirely within Roblox — jump in and drive with no extra downloads needed.",
-              },
             ].map((f) => (
               <div
                 key={f.title}
