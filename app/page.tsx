@@ -38,7 +38,7 @@ export default function Home() {
             rel="noopener noreferrer"
             className="px-6 py-3 rounded-xl bg-[#8b3cf7] hover:bg-[#7c3aed] text-white font-semibold transition-colors"
           >
-            Join Discord
+            Join Us
           </a>
           <Link
             href="/fleet"

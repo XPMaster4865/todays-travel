@@ -36,7 +36,7 @@ export default function Navbar() {
             rel="noopener noreferrer"
             className="px-4 py-2 rounded-lg bg-[#8b3cf7] hover:bg-[#7c3aed] text-white text-sm font-semibold transition-colors"
           >
-            Discord
+            Join Us
           </a>
         </div>
 
@@ -71,7 +71,7 @@ export default function Navbar() {
             rel="noopener noreferrer"
             className="px-4 py-2 rounded-lg bg-[#8b3cf7] text-white text-sm font-semibold text-center"
           >
-            Discord
+            Join Us
           </a>
         </div>
       )}
