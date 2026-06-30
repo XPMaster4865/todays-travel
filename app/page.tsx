@@ -5,9 +5,14 @@ export default function Home() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden flex flex-col items-center justify-center text-center min-h-[90vh] px-4 py-24">
+        {/* Bus background image */}
         <div className="absolute inset-0 -z-10">
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#8b3cf7]/20 blur-[120px]" />
-          <div className="absolute top-2/3 left-1/2 -translate-x-1/2 w-[400px] h-[400px] rounded-full bg-[#2dd4bf]/10 blur-[100px]" />
+          <img
+            src="/Todays Travel Streetdeck (1).png"
+            alt=""
+            className="w-full h-full object-cover object-center opacity-20"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0f0a1e]/60 via-[#0f0a1e]/40 to-[#0f0a1e]" />
         </div>
 
         <div className="inline-flex items-center gap-2 bg-[#8b3cf7]/20 border border-[#8b3cf7]/40 rounded-full px-4 py-1.5 text-sm text-[#c084fc] mb-6">
