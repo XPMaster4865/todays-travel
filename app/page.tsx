@@ -1,19 +1,12 @@
 import Link from "next/link";
+import HeroBackground from "@/components/HeroBackground";
 
 export default function Home() {
   return (
     <>
       {/* Hero */}
       <section className="relative overflow-hidden flex flex-col items-center justify-center text-center min-h-[90vh] px-4 py-24">
-        {/* Bus background image */}
-        <div className="absolute inset-0 -z-10">
-          <img
-            src="/Todays Travel Streetdeck (1).png"
-            alt=""
-            className="w-full h-full object-cover object-center opacity-20"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0f0a1e]/60 via-[#0f0a1e]/40 to-[#0f0a1e]" />
-        </div>
+        <HeroBackground />
 
         <div className="inline-flex items-center gap-2 bg-[#8b3cf7]/20 border border-[#8b3cf7]/40 rounded-full px-4 py-1.5 text-sm text-[#c084fc] mb-6">
           <span className="w-2 h-2 rounded-full bg-[#2dd4bf] animate-pulse" />
