@@ -2,30 +2,22 @@ import fs from "fs";
 import path from "path";
 import FleetCarousel from "@/components/FleetCarousel";
 
-function getVehicleName(filename: string): string {
-  return filename
-    .replace(/\.\w+$/, "")          // remove extension
-    .replace(/\s*\(?\d+\)?$/, "")  // remove trailing (1), (2), 3) etc
-    .replace(/^Todays Travel\s*/i, "") // strip "Todays Travel" prefix
-    .trim();
-}
-
 export default function Fleet() {
   const liveriesDir = path.join(process.cwd(), "public", "liveries");
-  const files = fs
-    .readdirSync(liveriesDir)
-    .filter((f) => /\.(png|jpe?g|webp)$/i.test(f))
-    .sort();
 
-  // Group by vehicle name
-  const groupMap = new Map<string, string[]>();
-  for (const f of files) {
-    const name = getVehicleName(f);
-    if (!groupMap.has(name)) groupMap.set(name, []);
-    groupMap.get(name)!.push(`/liveries/${f}`);
-  }
-
-  const groups = Array.from(groupMap.entries()).map(([name, images]) => ({ name, images }));
+  const groups = fs
+    .readdirSync(liveriesDir, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((d) => ({
+      name: d.name,
+      images: fs
+        .readdirSync(path.join(liveriesDir, d.name))
+        .filter((f) => /\.(png|jpe?g|webp)$/i.test(f))
+        .sort()
+        .map((f) => `/liveries/${d.name}/${f}`),
+    }))
+    .filter((g) => g.images.length > 0);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-24">
