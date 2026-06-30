@@ -4,11 +4,13 @@ import GalleryGrid from "@/components/GalleryGrid";
 
 export default function Gallery() {
   const galleryDir = path.join(process.cwd(), "public", "gallery");
-  const images = fs
-    .readdirSync(galleryDir)
-    .filter((f) => /\.(png|jpe?g|webp)$/i.test(f))
-    .sort()
-    .map((f) => `/gallery/${f}`);
+  const images = fs.existsSync(galleryDir)
+    ? fs
+        .readdirSync(galleryDir)
+        .filter((f) => /\.(png|jpe?g|webp)$/i.test(f))
+        .sort()
+        .map((f) => `/gallery/${f}`)
+    : [];
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-24">
