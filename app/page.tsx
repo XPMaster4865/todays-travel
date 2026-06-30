@@ -60,7 +60,7 @@ export default function Home() {
             { value: "20+", label: "Custom Routes" },
             { value: "4", label: "Liveries" },
             { value: "Croydon", label: "Operating Area" },
-            { value: "Roblox", label: "Platform" },
+            { value: "80+", label: "Community Members" },
           ].map((s) => (
             <div key={s.label}>
               <p className="text-3xl font-extrabold text-[#c084fc]">{s.value}</p>
