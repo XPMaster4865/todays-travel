@@ -9,6 +9,7 @@ const links = [
   { href: "/routes", label: "Routes" },
   { href: "/gallery", label: "Gallery" },
   { href: "/staff", label: "Staff" },
+  { href: "/portal", label: "Portal" },
 ];
 
 export default function Navbar() {
