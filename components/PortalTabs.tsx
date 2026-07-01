@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 type Role = { label: string; colour: string };
 type Session = { roles: Role[] };
 
+const MEDIA_ROLES = ["Owner", "Media Team", "Head of Media"];
+
 const BASE_TABS = [
   { label: "Overview", href: "/portal" },
   { label: "Company Funds", href: "/portal/funds" },
@@ -16,6 +18,7 @@ const BASE_TABS = [
 export default function PortalTabs() {
   const pathname = usePathname();
   const [isBuilder, setIsBuilder] = useState(false);
+  const [isMedia, setIsMedia] = useState(false);
 
   useEffect(() => {
     const stored = sessionStorage.getItem("tt_session");
@@ -23,10 +26,15 @@ export default function PortalTabs() {
     try {
       const session: Session = JSON.parse(stored);
       setIsBuilder(session.roles.some((r) => r.label === "Builder"));
+      setIsMedia(session.roles.some((r) => MEDIA_ROLES.includes(r.label)));
     } catch { /* ignore */ }
   }, [pathname]);
 
-  const tabs = isBuilder ? [...BASE_TABS, { label: "Maintenance", href: "/maintenance" }] : BASE_TABS;
+  const tabs = [
+    ...BASE_TABS,
+    ...(isMedia ? [{ label: "Gallery Upload", href: "/portal/gallery-upload" }] : []),
+    ...(isBuilder ? [{ label: "Maintenance", href: "/maintenance" }] : []),
+  ];
 
   return (
     <div className="flex gap-2 mb-10 border-b border-purple-900/40 overflow-x-auto">
