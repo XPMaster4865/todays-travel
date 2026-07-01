@@ -9,6 +9,7 @@ const BASE_TABS = [
   { label: "Overview", href: "/portal" },
   { label: "Company Funds", href: "/portal/funds" },
   { label: "Shifts", href: "/portal/shifts" },
+  { label: "Route Log", href: "/portal/route-log" },
 ];
 
 export default function PortalTabs() {
