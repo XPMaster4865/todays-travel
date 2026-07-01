@@ -30,7 +30,7 @@ type Member = {
   lastLogin: number;
 };
 
-async function recordMember(env: Env, member: Omit<Member, "lastLogin">) {
+async function recordMember(env: Env, member: Omit<Member, "lastLogin">): Promise<Member> {
   const raw = await env.APP_KV.get("members:list");
   const members: Record<string, Member> = raw ? JSON.parse(raw) : {};
   const existing = members[member.id];
@@ -39,12 +39,14 @@ async function recordMember(env: Env, member: Omit<Member, "lastLogin">) {
     ? existing.roles.filter((r) => !member.roles.some((mr) => mr.label === r.label) && !Object.values(ROLE_MAP).some((rm) => rm.label === r.label))
     : [];
 
-  members[member.id] = {
+  const merged: Member = {
     ...member,
     roles: [...member.roles, ...extraRoles],
     lastLogin: Date.now(),
   };
+  members[member.id] = merged;
   await env.APP_KV.put("members:list", JSON.stringify(members));
+  return merged;
 }
 
 export async function onRequestGet(context: { request: Request; env: Env }) {
@@ -103,8 +105,8 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
         roles: [],
         inServer: false,
       };
-      await recordMember(context.env, payload);
-      const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
+      const merged = await recordMember(context.env, payload);
+      const encoded = btoa(encodeURIComponent(JSON.stringify(merged)));
       return Response.redirect(`${origin}/portal#${encoded}`);
     }
 
@@ -123,8 +125,8 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
       inServer: true,
     };
 
-    await recordMember(context.env, payload);
-    const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
+    const merged = await recordMember(context.env, payload);
+    const encoded = btoa(encodeURIComponent(JSON.stringify(merged)));
     return Response.redirect(`${origin}/portal#${encoded}`);
   } catch {
     return Response.redirect(`${origin}/portal?error=server_error`);
