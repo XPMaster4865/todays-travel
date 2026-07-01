@@ -221,6 +221,11 @@ function PortalInner() {
               <a href="/routes" className="px-4 py-2 rounded-xl text-sm font-semibold bg-[#2dd4bf]/10 border border-[#2dd4bf]/30 text-[#2dd4bf] hover:bg-[#2dd4bf]/20 transition-colors">
                 Routes
               </a>
+              {session.roles.some((r) => r.label === "Builder") && (
+                <a href="/maintenance" className="px-4 py-2 rounded-xl text-sm font-semibold bg-[#fb923c]/10 border border-[#fb923c]/30 text-[#fb923c] hover:bg-[#fb923c]/20 transition-colors">
+                  Maintenance
+                </a>
+              )}
             </div>
           </div>
         </div>
