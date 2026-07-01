@@ -64,7 +64,7 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
     await context.env.APP_KV.put("routelog:entries", JSON.stringify(entries.slice(0, 500)));
 
     return Response.json({ entry });
-  } catch {
-    return Response.json({ error: "Server error" }, { status: 500 });
+  } catch (err) {
+    return Response.json({ error: "Server error", detail: String(err) }, { status: 500 });
   }
 }
