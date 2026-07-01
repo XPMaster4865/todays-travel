@@ -65,14 +65,14 @@ export default function RouteLog() {
       form.append("image", image);
 
       const res = await fetch("/api/routelog/add", { method: "POST", body: form });
-      const data = await res.json() as { entry?: Entry; error?: string };
+      const data = await res.json() as { entry?: Entry; error?: string; detail?: string };
       if (data.entry) {
         setEntries((prev) => [data.entry!, ...prev]);
         setNote("");
         onFileChange(null);
         if (fileRef.current) fileRef.current.value = "";
       } else {
-        setError(data.error ?? "Failed to log route.");
+        setError(`${data.error ?? "Failed to log route."}${data.detail ? ` (${data.detail})` : ""}`);
       }
     } catch {
       setError("Something went wrong. Please try again.");
