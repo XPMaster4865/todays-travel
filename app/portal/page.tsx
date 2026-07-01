@@ -29,8 +29,41 @@ function loginUrl() {
 function PortalInner() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [code, setCode] = useState("");
+  const [codeStatus, setCodeStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [codeMessage, setCodeMessage] = useState("");
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
+
+  const redeemCode = async () => {
+    if (!code.trim()) return;
+    setCodeStatus("loading");
+    try {
+      const res = await fetch("/api/auth/redeem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: code.trim() }),
+      });
+      const data = await res.json() as { role?: Role; error?: string };
+      if (data.role && session) {
+        const already = session.roles.some((r) => r.label === data.role!.label);
+        if (!already) {
+          const updated = { ...session, roles: [...session.roles, data.role] };
+          setSession(updated);
+          sessionStorage.setItem("tt_session", JSON.stringify(updated));
+        }
+        setCodeStatus("success");
+        setCodeMessage(`Role "${data.role.label}" added!`);
+        setCode("");
+      } else {
+        setCodeStatus("error");
+        setCodeMessage("Invalid code. Please check and try again.");
+      }
+    } catch {
+      setCodeStatus("error");
+      setCodeMessage("Something went wrong. Please try again.");
+    }
+  };
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
@@ -140,6 +173,37 @@ function PortalInner() {
                   </span>
                 ))}
               </div>
+            )}
+          </div>
+
+          {/* Role code */}
+          <div className="rounded-2xl border border-purple-900/40 bg-[#130d24] p-6">
+            <h2 className="font-bold text-lg mb-1 text-[#c084fc]">Role Code</h2>
+            <p className="text-xs text-[#f0eaff]/40 mb-4">
+              If your roles weren&apos;t detected correctly, enter a code below to manually add them.
+            </p>
+            <div className="flex gap-3">
+              <input
+                type="text"
+                value={code}
+                onChange={(e) => { setCode(e.target.value.toUpperCase()); setCodeStatus("idle"); }}
+                onKeyDown={(e) => e.key === "Enter" && redeemCode()}
+                placeholder="Enter code..."
+                className="flex-1 bg-[#0f0a1e] border border-purple-900/40 rounded-xl px-4 py-2.5 text-sm text-[#f0eaff] placeholder-[#f0eaff]/20 focus:outline-none focus:border-[#8b3cf7]/60"
+              />
+              <button
+                onClick={redeemCode}
+                disabled={codeStatus === "loading" || !code.trim()}
+                className="px-5 py-2.5 rounded-xl bg-[#8b3cf7] hover:bg-[#7c3aed] disabled:opacity-40 text-white text-sm font-semibold transition-colors"
+              >
+                {codeStatus === "loading" ? "..." : "Redeem"}
+              </button>
+            </div>
+            {codeStatus === "success" && (
+              <p className="mt-3 text-sm text-emerald-400">{codeMessage}</p>
+            )}
+            {codeStatus === "error" && (
+              <p className="mt-3 text-sm text-red-400">{codeMessage}</p>
             )}
           </div>
 

@@ -13,6 +13,7 @@ const ROLE_MAP: Record<string, { label: string; colour: string }> = {
   "1496472869868273724": { label: "Driving Instructor", colour: "#34d399" },
   "1489524705324040274": { label: "Media Team", colour: "#f472b6" },
   "1490383449096458260": { label: "Head of Media", colour: "#f472b6" },
+  "BUILDER_ROLE_ID_HERE": { label: "Builder", colour: "#fb923c" },
 };
 
 export async function onRequestGet(context: { request: Request; env: Env }) {
