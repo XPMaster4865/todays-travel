@@ -41,7 +41,7 @@ export default function PortalTabs() {
   ];
 
   return (
-    <div className="flex gap-2 mb-10 border-b border-purple-900/40 overflow-x-auto">
+    <div className="flex flex-wrap gap-2 mb-10 border-b border-purple-900/40">
       {tabs.map((tab) => {
         const active = pathname === tab.href;
         return (

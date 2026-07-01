@@ -134,11 +134,29 @@ export default function Maintenance() {
 
         {/* Overall status */}
         <div className="rounded-2xl border border-purple-900/40 bg-[#130d24] p-6 col-span-full">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 mb-4">
             <div className={`w-3 h-3 rounded-full ${allOk ? "bg-emerald-400" : anyError ? "bg-red-400" : "bg-amber-400 animate-pulse"}`} />
             <h2 className="font-bold text-lg">
               {allOk ? "All systems operational" : anyError ? "Issues detected" : "Checking systems..."}
             </h2>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href="https://discord.com/developers/applications"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 rounded-xl text-sm font-semibold bg-[#5865F2]/20 border border-[#5865F2]/30 text-[#5865F2] hover:bg-[#5865F2]/30 transition-colors"
+            >
+              Discord Developer Portal
+            </a>
+            <a
+              href="https://dash.cloudflare.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 rounded-xl text-sm font-semibold bg-[#fb923c]/20 border border-[#fb923c]/30 text-[#fb923c] hover:bg-[#fb923c]/30 transition-colors"
+            >
+              Cloudflare Dashboard
+            </a>
           </div>
         </div>
 
