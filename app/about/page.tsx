@@ -2,7 +2,7 @@ const driverQuotes: { name: string; text: string }[] = [
   // Add driver testimonials here, e.g. { name: "Driver Name", text: "Their message..." },
 ];
 
-const generalMessage = "";
+const generalMessage = "For nearly 3 years, Todays Travel has been serving the streets of Croydon, and in that time we've built something we're really proud of. Our team is experienced and knows what it takes to run a smooth operation, but more than that, we're a kind and welcoming community that's always willing to listen. Whether you've been driving for years or you're just starting out, Todays Travel is open to anyone who wants to join us on the road.";
 
 export default function About() {
   return (
