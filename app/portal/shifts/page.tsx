@@ -8,6 +8,8 @@ type Session = { id: string; globalName: string; roles: Role[] };
 type ActiveShift = { startedAt: number; author: string };
 type ShiftEntry = { id: string; userId: string; author: string; startedAt: number; endedAt: number };
 
+const ADMIN_ROLES = ["Owner", "Co-Owner", "Moderator", "Builder"];
+
 function formatDuration(ms: number) {
   const totalSeconds = Math.floor(ms / 1000);
   const hours = Math.floor(totalSeconds / 3600);
@@ -116,6 +118,18 @@ export default function Shifts() {
   }
 
   const myEntries = entries.filter((e) => e.userId === session?.id);
+  const isAdmin = session?.roles.some((r) => ADMIN_ROLES.includes(r.label)) ?? false;
+
+  const deleteEntry = async (id: string) => {
+    setEntries((prev) => prev.filter((e) => e.id !== id));
+    try {
+      await fetch("/api/shifts/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+    } catch { /* ignore */ }
+  };
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-24">
@@ -171,9 +185,18 @@ export default function Shifts() {
                     <p className="font-semibold text-[#f0eaff]">{e.author}</p>
                     <p className="text-xs text-[#f0eaff]/50">{formatDuration(e.endedAt - e.startedAt)}</p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right flex flex-col items-end gap-1">
                     <p className="text-xs text-[#f0eaff]/40">{new Date(e.startedAt).toLocaleString()}</p>
                     <p className="text-xs text-[#f0eaff]/30">to {new Date(e.endedAt).toLocaleTimeString()}</p>
+                    {isAdmin && (
+                      <button
+                        onClick={() => deleteEntry(e.id)}
+                        className="text-xs text-red-400/70 hover:text-red-400 transition-colors"
+                        aria-label="Delete entry"
+                      >
+                        Delete
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}

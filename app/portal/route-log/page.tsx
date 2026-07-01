@@ -7,6 +7,8 @@ type Role = { label: string; colour: string };
 type Session = { globalName: string; roles: Role[] };
 type Entry = { id: string; route: string; note: string; author: string; timestamp: number; imageKey: string };
 
+const ADMIN_ROLES = ["Owner", "Co-Owner", "Moderator", "Builder"];
+
 const ROUTE_NUMBERS = [
   "1", "2", "3", "4", "5", "6", "7", "8", "13",
   "GR", "GR2", "GR3", "GR4", "GR5",
@@ -44,6 +46,19 @@ export default function RouteLog() {
       .then((data: { entries: Entry[] }) => setEntries(data.entries ?? []))
       .catch(() => setError("Could not load route log history."));
   }, [router]);
+
+  const isAdmin = session?.roles.some((r) => ADMIN_ROLES.includes(r.label)) ?? false;
+
+  const deleteEntry = async (id: string) => {
+    setEntries((prev) => prev.filter((e) => e.id !== id));
+    try {
+      await fetch("/api/routelog/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+    } catch { /* ignore */ }
+  };
 
   const onFileChange = (file: File | null) => {
     setImage(file);
@@ -176,7 +191,18 @@ export default function RouteLog() {
                     </div>
                     {e.note && <p className="text-xs text-[#f0eaff]/50 mt-1">{e.note}</p>}
                   </div>
-                  <p className="shrink-0 text-xs text-[#f0eaff]/30">{new Date(e.timestamp).toLocaleString()}</p>
+                  <div className="shrink-0 text-right flex flex-col items-end gap-1">
+                    <p className="text-xs text-[#f0eaff]/30">{new Date(e.timestamp).toLocaleString()}</p>
+                    {isAdmin && (
+                      <button
+                        onClick={() => deleteEntry(e.id)}
+                        className="text-xs text-red-400/70 hover:text-red-400 transition-colors"
+                        aria-label="Delete entry"
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

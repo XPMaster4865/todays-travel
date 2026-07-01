@@ -7,6 +7,8 @@ type Role = { label: string; colour: string };
 type Session = { globalName: string; roles: Role[] };
 type Entry = { id: string; balance: number; author: string; timestamp: number };
 
+const ADMIN_ROLES = ["Owner", "Co-Owner", "Moderator", "Builder"];
+
 function formatCurrency(n: number) {
   return `${new Intl.NumberFormat("en-GB").format(n)} points`;
 }
@@ -33,6 +35,19 @@ export default function Funds() {
       .then((data: { entries: Entry[] }) => setEntries(data.entries ?? []))
       .catch(() => setError("Could not load fund history."));
   }, [router]);
+
+  const isAdmin = session?.roles.some((r) => ADMIN_ROLES.includes(r.label)) ?? false;
+
+  const deleteEntry = async (id: string) => {
+    setEntries((prev) => prev.filter((e) => e.id !== id));
+    try {
+      await fetch("/api/funds/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+    } catch { /* ignore */ }
+  };
 
   const submit = async () => {
     const value = parseFloat(balance);
@@ -129,9 +144,20 @@ export default function Funds() {
               {entries.map((e) => (
                 <div key={e.id} className="flex items-center justify-between border border-purple-900/20 rounded-xl px-4 py-3">
                   <p className="font-semibold text-[#f0eaff]">{formatCurrency(e.balance)}</p>
-                  <div className="text-right">
-                    <p className="text-xs text-[#f0eaff]/40">{e.author}</p>
-                    <p className="text-xs text-[#f0eaff]/30">{new Date(e.timestamp).toLocaleString()}</p>
+                  <div className="flex items-center gap-3">
+                    <div className="text-right">
+                      <p className="text-xs text-[#f0eaff]/40">{e.author}</p>
+                      <p className="text-xs text-[#f0eaff]/30">{new Date(e.timestamp).toLocaleString()}</p>
+                    </div>
+                    {isAdmin && (
+                      <button
+                        onClick={() => deleteEntry(e.id)}
+                        className="text-xs text-red-400/70 hover:text-red-400 transition-colors"
+                        aria-label="Delete entry"
+                      >
+                        Delete
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
