@@ -6,6 +6,10 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
   const url = new URL(context.request.url);
   const id = url.searchParams.get("id");
 
+  if (url.searchParams.get("debug")) {
+    return Response.json({ envKeys: Object.keys(context.env) });
+  }
+
   if (!id) {
     return new Response("Missing id", { status: 400 });
   }
