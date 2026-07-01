@@ -189,7 +189,7 @@ function PortalInner() {
           <div className="rounded-2xl border border-purple-900/40 bg-[#130d24] p-6">
             <h2 className="font-bold text-lg mb-1 text-[#c084fc]">Role Code</h2>
             <p className="text-xs text-[#f0eaff]/40 mb-4">
-              If your roles weren&apos;t detected correctly, enter a code below to manually add them.
+              If your roles weren&apos;t added correctly, contact XP and he will give you the code.
             </p>
             <div className="flex gap-3">
               <input
