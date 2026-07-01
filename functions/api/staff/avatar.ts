@@ -16,7 +16,8 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
     });
 
     if (!userRes.ok) {
-      return Response.redirect("https://cdn.discordapp.com/embed/avatars/0.png", 302);
+      const detail = await userRes.text();
+      return new Response(`Discord API error ${userRes.status}: ${detail}. Token present: ${Boolean(context.env.DISCORD_BOT_TOKEN)}`, { status: 500 });
     }
 
     const user = await userRes.json() as { avatar: string | null };
