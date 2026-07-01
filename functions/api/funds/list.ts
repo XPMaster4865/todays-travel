@@ -1,9 +1,9 @@
 interface Env {
-  FUNDS_KV: { get(key: string): Promise<string | null> };
+  APP_KV: { get(key: string): Promise<string | null> };
 }
 
 export async function onRequestGet(context: { env: Env }) {
-  const raw = await context.env.FUNDS_KV.get("entries");
+  const raw = await context.env.APP_KV.get("funds:entries");
   const entries = raw ? JSON.parse(raw) : [];
   return Response.json({ entries });
 }

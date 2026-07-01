@@ -1,5 +1,5 @@
 interface Env {
-  FUNDS_KV: {
+  APP_KV: {
     get(key: string): Promise<string | null>;
     put(key: string, value: string): Promise<void>;
   };
@@ -29,10 +29,10 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       timestamp: Date.now(),
     };
 
-    const raw = await context.env.FUNDS_KV.get("entries");
+    const raw = await context.env.APP_KV.get("funds:entries");
     const entries: Entry[] = raw ? JSON.parse(raw) : [];
     entries.unshift(entry);
-    await context.env.FUNDS_KV.put("entries", JSON.stringify(entries.slice(0, 200)));
+    await context.env.APP_KV.put("funds:entries", JSON.stringify(entries.slice(0, 200)));
 
     return Response.json({ entry });
   } catch {
