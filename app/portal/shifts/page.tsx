@@ -27,8 +27,8 @@ export default function Shifts() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  const load = () => {
-    fetch("/api/shifts/list")
+  const load = (userId: string) => {
+    fetch(`/api/shifts/list?userId=${encodeURIComponent(userId)}`)
       .then((res) => res.json())
       .then((data: { entries: ShiftEntry[]; active: Record<string, ActiveShift> }) => {
         setEntries(data.entries ?? []);
@@ -40,11 +40,13 @@ export default function Shifts() {
   useEffect(() => {
     const stored = sessionStorage.getItem("tt_session");
     if (!stored) { router.replace("/portal"); return; }
+    let parsed: Session;
     try {
-      setSession(JSON.parse(stored));
+      parsed = JSON.parse(stored);
+      setSession(parsed);
     } catch { router.replace("/portal"); return; }
     setLoading(false);
-    load();
+    load(parsed.id);
   }, [router]);
 
   useEffect(() => {
@@ -113,7 +115,7 @@ export default function Shifts() {
     );
   }
 
-  const activeList = Object.entries(active);
+  const myEntries = entries.filter((e) => e.userId === session?.id);
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-24">
@@ -156,34 +158,14 @@ export default function Shifts() {
           {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
         </div>
 
-        {/* Currently on shift */}
-        <div className="rounded-2xl border border-purple-900/40 bg-[#130d24] p-6">
-          <h2 className="font-bold text-lg mb-4 text-[#c084fc]">Currently On Shift</h2>
-          {activeList.length === 0 ? (
-            <p className="text-[#f0eaff]/40 text-sm">No one is currently clocked in.</p>
-          ) : (
-            <div className="flex flex-col gap-3">
-              {activeList.map(([userId, shift]) => (
-                <div key={userId} className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-[#f0eaff]/70">{shift.author}</span>
-                  </div>
-                  <span className="font-mono text-xs text-emerald-400">{formatDuration(now - shift.startedAt)}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
         {/* History */}
         <div className="rounded-2xl border border-purple-900/40 bg-[#130d24] p-6">
-          <h2 className="font-bold text-lg mb-4 text-[#c084fc]">Shift History</h2>
-          {entries.length === 0 ? (
+          <h2 className="font-bold text-lg mb-4 text-[#c084fc]">Your Shift History</h2>
+          {myEntries.length === 0 ? (
             <p className="text-[#f0eaff]/40 text-sm">No completed shifts yet.</p>
           ) : (
             <div className="flex flex-col gap-3 max-h-96 overflow-y-auto">
-              {entries.map((e) => (
+              {myEntries.map((e) => (
                 <div key={e.id} className="flex items-center justify-between border border-purple-900/20 rounded-xl px-4 py-3">
                   <div>
                     <p className="font-semibold text-[#f0eaff]">{e.author}</p>
