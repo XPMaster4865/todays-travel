@@ -2,6 +2,7 @@ import Link from "next/link";
 import fs from "fs";
 import path from "path";
 import HeroBackground from "@/components/HeroBackground";
+import FundsBar from "@/components/FundsBar";
 
 export default function Home() {
   const liveriesDir = path.join(process.cwd(), "public", "liveries");
@@ -24,6 +25,8 @@ export default function Home() {
           <span className="w-2 h-2 rounded-full bg-[#2dd4bf] animate-pulse" />
           Now operating in Croydon
         </div>
+
+        <FundsBar />
 
         <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
           <span className="text-[#c084fc]">Todays</span>{" "}
