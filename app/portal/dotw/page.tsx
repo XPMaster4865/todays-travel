@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import PortalTabs from "@/components/PortalTabs";
 
-type Session = { globalName: string };
+type Role = { label: string; colour: string };
+type Session = { globalName: string; roles: Role[] };
 type State = { route: string; weekStart: number; championName: string; championCount: number };
+
+const ALLOWED_ROLES = ["Owner", "Builder"];
 
 const ROUTE_NUMBERS = [
   "1", "2", "3", "4", "5", "6", "7", "8", "13",
@@ -31,7 +34,11 @@ export default function DotwManage() {
     const stored = sessionStorage.getItem("tt_session");
     if (!stored) { router.replace("/portal"); return; }
     try {
-      JSON.parse(stored) as Session;
+      const session = JSON.parse(stored) as Session;
+      if (!session.roles.some((r) => ALLOWED_ROLES.includes(r.label))) {
+        router.replace("/portal");
+        return;
+      }
     } catch { router.replace("/portal"); return; }
 
     fetch("/api/dotw/state")

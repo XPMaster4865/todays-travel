@@ -6,19 +6,20 @@ type Role = { label: string; colour: string };
 type Session = { roles: Role[] };
 
 const MEDIA_ROLES = ["Owner", "Media Team", "Head of Media"];
+const DOTW_ROLES = ["Owner", "Builder"];
 
 const BASE_TABS = [
   { label: "Overview", href: "/portal" },
   { label: "Company Funds", href: "/portal/funds" },
   { label: "Shifts", href: "/portal/shifts" },
   { label: "Route Log", href: "/portal/route-log" },
-  { label: "Driver of the Week", href: "/portal/dotw" },
 ];
 
 export default function PortalTabs() {
   const pathname = usePathname();
   const [isBuilder, setIsBuilder] = useState(false);
   const [isMedia, setIsMedia] = useState(false);
+  const [canManageDotw, setCanManageDotw] = useState(false);
 
   useEffect(() => {
     const stored = sessionStorage.getItem("tt_session");
@@ -27,11 +28,13 @@ export default function PortalTabs() {
       const session: Session = JSON.parse(stored);
       setIsBuilder(session.roles.some((r) => r.label === "Builder"));
       setIsMedia(session.roles.some((r) => MEDIA_ROLES.includes(r.label)));
+      setCanManageDotw(session.roles.some((r) => DOTW_ROLES.includes(r.label)));
     } catch { /* ignore */ }
   }, [pathname]);
 
   const tabs = [
     ...BASE_TABS,
+    ...(canManageDotw ? [{ label: "Driver of the Week", href: "/portal/dotw" }] : []),
     ...(isMedia ? [{ label: "Gallery Upload", href: "/portal/gallery-upload" }] : []),
     ...(isBuilder ? [{ label: "Maintenance", href: "/maintenance" }] : []),
   ];
