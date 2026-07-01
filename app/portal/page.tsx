@@ -43,7 +43,13 @@ function PortalInner() {
       const res = await fetch("/api/auth/redeem", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code: code.trim() }),
+        body: JSON.stringify({
+          code: code.trim(),
+          userId: session?.id,
+          globalName: session?.globalName,
+          username: session?.username,
+          avatar: session?.avatar,
+        }),
       });
       const data = await res.json() as { role?: Role; error?: string };
       if (data.role && session) {

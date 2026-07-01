@@ -1,6 +1,10 @@
 interface Env {
   DISCORD_CLIENT_ID: string;
   DISCORD_CLIENT_SECRET: string;
+  APP_KV: {
+    get(key: string): Promise<string | null>;
+    put(key: string, value: string): Promise<void>;
+  };
 }
 
 const GUILD_ID = "1470821976460496908";
@@ -14,6 +18,34 @@ const ROLE_MAP: Record<string, { label: string; colour: string }> = {
   "1489524705324040274": { label: "Media Team", colour: "#f472b6" },
   "1490383449096458260": { label: "Head of Media", colour: "#f472b6" },
 };
+
+type Role = { label: string; colour: string };
+type Member = {
+  id: string;
+  username: string;
+  globalName: string;
+  avatar: string | null;
+  roles: Role[];
+  inServer: boolean;
+  lastLogin: number;
+};
+
+async function recordMember(env: Env, member: Omit<Member, "lastLogin">) {
+  const raw = await env.APP_KV.get("members:list");
+  const members: Record<string, Member> = raw ? JSON.parse(raw) : {};
+  const existing = members[member.id];
+  // Preserve any manually redeemed roles (e.g. Builder) not tied to a Discord role
+  const extraRoles = existing
+    ? existing.roles.filter((r) => !member.roles.some((mr) => mr.label === r.label) && !Object.values(ROLE_MAP).some((rm) => rm.label === r.label))
+    : [];
+
+  members[member.id] = {
+    ...member,
+    roles: [...member.roles, ...extraRoles],
+    lastLogin: Date.now(),
+  };
+  await env.APP_KV.put("members:list", JSON.stringify(members));
+}
 
 export async function onRequestGet(context: { request: Request; env: Env }) {
   const url = new URL(context.request.url);
@@ -71,6 +103,7 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
         roles: [],
         inServer: false,
       };
+      await recordMember(context.env, payload);
       const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
       return Response.redirect(`${origin}/portal#${encoded}`);
     }
@@ -90,6 +123,7 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
       inServer: true,
     };
 
+    await recordMember(context.env, payload);
     const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
     return Response.redirect(`${origin}/portal#${encoded}`);
   } catch {
