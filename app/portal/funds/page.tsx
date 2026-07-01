@@ -8,7 +8,7 @@ type Session = { globalName: string; roles: Role[] };
 type Entry = { id: string; balance: number; note: string; author: string; timestamp: number };
 
 function formatCurrency(n: number) {
-  return new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(n);
+  return `${new Intl.NumberFormat("en-GB").format(n)} points`;
 }
 
 export default function Funds() {
@@ -105,10 +105,10 @@ export default function Funds() {
           <div className="flex flex-col gap-3">
             <input
               type="number"
-              step="0.01"
+              step="1"
               value={balance}
               onChange={(e) => setBalance(e.target.value)}
-              placeholder="Balance (e.g. 1250.00)"
+              placeholder="Points (e.g. 1250)"
               className="bg-[#0f0a1e] border border-purple-900/40 rounded-xl px-4 py-2.5 text-sm text-[#f0eaff] placeholder-[#f0eaff]/20 focus:outline-none focus:border-[#8b3cf7]/60"
             />
             <input
