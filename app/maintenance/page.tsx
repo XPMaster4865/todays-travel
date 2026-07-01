@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import PortalTabs from "@/components/PortalTabs";
 
 type Role = { label: string; colour: string };
 type Session = { globalName: string; avatar: string | null; roles: Role[] };
@@ -125,7 +126,9 @@ export default function Maintenance() {
           Builder only
         </span>
       </div>
-      <p className="text-[#f0eaff]/50 text-lg mb-12">Live site performance and diagnostics</p>
+      <p className="text-[#f0eaff]/50 text-lg mb-6">Live site performance and diagnostics</p>
+
+      <PortalTabs />
 
       <div className="grid md:grid-cols-2 gap-6">
 

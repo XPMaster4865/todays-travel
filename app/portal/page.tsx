@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import PortalTabs from "@/components/PortalTabs";
 
 const CLIENT_ID = "1521670583035629668";
 const SCOPES = "identify guilds.members.read";
@@ -101,6 +102,8 @@ function PortalInner() {
       <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
         Staff <span className="text-[#c084fc]">Portal</span>
       </h1>
+
+      {session && <PortalTabs />}
 
       {!session ? (
         <div className="rounded-2xl border border-purple-900/40 bg-[#130d24] p-10 flex flex-col items-center text-center gap-6 mt-10">
@@ -221,11 +224,6 @@ function PortalInner() {
               <a href="/routes" className="px-4 py-2 rounded-xl text-sm font-semibold bg-[#2dd4bf]/10 border border-[#2dd4bf]/30 text-[#2dd4bf] hover:bg-[#2dd4bf]/20 transition-colors">
                 Routes
               </a>
-              {session.roles.some((r) => r.label === "Builder") && (
-                <a href="/maintenance" className="px-4 py-2 rounded-xl text-sm font-semibold bg-[#fb923c]/10 border border-[#fb923c]/30 text-[#fb923c] hover:bg-[#fb923c]/20 transition-colors">
-                  Maintenance
-                </a>
-              )}
             </div>
           </div>
         </div>
