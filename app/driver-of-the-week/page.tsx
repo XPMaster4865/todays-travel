@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-type State = { route: string; weekStart: number; championName: string; championCount: number };
+type State = { route: string; weekStart: number; championName: string; championCount: number; posterKey?: string };
 type RouteEntry = { route: string; author: string; timestamp: number };
 
 export default function DriverOfTheWeek() {
@@ -66,14 +66,23 @@ export default function DriverOfTheWeek() {
         <div className="rounded-2xl border border-purple-900/40 bg-[#130d24] p-6">
           <h2 className="font-bold text-[#c084fc] mb-2">This Week&apos;s Route</h2>
           {state?.route ? (
-            <div className="flex items-center gap-3">
-              <div className="w-14 h-14 rounded-xl bg-[#8b3cf7] flex items-center justify-center">
-                <span className="text-sm font-extrabold text-white">{state.route}</span>
+            <>
+              <div className="flex items-center gap-3">
+                <div className="w-14 h-14 rounded-xl bg-[#8b3cf7] flex items-center justify-center">
+                  <span className="text-sm font-extrabold text-white">{state.route}</span>
+                </div>
+                <p className="text-[#f0eaff]/60 text-sm">
+                  Drive this route and log it to compete for this week&apos;s title.
+                </p>
               </div>
-              <p className="text-[#f0eaff]/60 text-sm">
-                Drive this route and log it to compete for this week&apos;s title.
-              </p>
-            </div>
+              {state.posterKey && (
+                <img
+                  src={`/api/dotw/image?key=${encodeURIComponent(state.posterKey)}`}
+                  alt={`Route ${state.route} poster`}
+                  className="mt-4 w-full rounded-xl border border-purple-900/40"
+                />
+              )}
+            </>
           ) : (
             <p className="text-[#f0eaff]/40 text-sm">No route has been chosen yet.</p>
           )}

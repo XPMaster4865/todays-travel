@@ -1,11 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import PortalTabs from "@/components/PortalTabs";
 
 type Role = { label: string; colour: string };
 type Session = { globalName: string; roles: Role[] };
-type State = { route: string; weekStart: number; championName: string; championCount: number };
+type State = { route: string; weekStart: number; championName: string; championCount: number; posterKey?: string };
 
 const ALLOWED_ROLES = ["Owner", "Builder"];
 
@@ -29,6 +29,11 @@ export default function DotwManage() {
   const [championCount, setChampionCount] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  const [posterFile, setPosterFile] = useState<File | null>(null);
+  const [posterPreview, setPosterPreview] = useState<string | null>(null);
+  const [posterBusy, setPosterBusy] = useState(false);
+  const [posterError, setPosterError] = useState("");
+  const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const stored = sessionStorage.getItem("tt_session");
@@ -75,6 +80,35 @@ export default function DotwManage() {
     }
   };
 
+  const onPosterChange = (file: File | null) => {
+    setPosterFile(file);
+    setPosterPreview(file ? URL.createObjectURL(file) : null);
+  };
+
+  const uploadPoster = async () => {
+    if (!posterFile) return;
+    setPosterBusy(true);
+    setPosterError("");
+    try {
+      const form = new FormData();
+      form.append("image", posterFile);
+      const res = await fetch("/api/dotw/poster", { method: "POST", body: form });
+      const data = await res.json() as { state?: State; error?: string; detail?: string };
+      if (data.state) {
+        setState(data.state);
+        setPosterFile(null);
+        setPosterPreview(null);
+        if (fileRef.current) fileRef.current.value = "";
+      } else {
+        setPosterError(`${data.error ?? "Failed to upload poster."}${data.detail ? ` (${data.detail})` : ""}`);
+      }
+    } catch {
+      setPosterError("Something went wrong. Please try again.");
+    } finally {
+      setPosterBusy(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -115,6 +149,35 @@ export default function DotwManage() {
             >
               Set Route
             </button>
+          </div>
+
+          {/* Optional route poster */}
+          <div className="mt-5 pt-5 border-t border-purple-900/20">
+            <label className="block text-xs text-[#f0eaff]/40 mb-2">Route poster (optional)</label>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              onChange={(e) => onPosterChange(e.target.files?.[0] ?? null)}
+              className="block w-full text-sm text-[#f0eaff]/70 file:mr-4 file:px-4 file:py-2 file:rounded-xl file:border-0 file:bg-[#8b3cf7] file:text-white file:font-semibold file:cursor-pointer hover:file:bg-[#7c3aed]"
+            />
+            {(posterPreview || state?.posterKey) && (
+              <img
+                src={posterPreview ?? `/api/dotw/image?key=${encodeURIComponent(state!.posterKey!)}`}
+                alt="Route poster"
+                className="mt-3 rounded-xl border border-purple-900/40 max-h-48"
+              />
+            )}
+            {posterFile && (
+              <button
+                onClick={uploadPoster}
+                disabled={posterBusy}
+                className="mt-3 px-5 py-2.5 rounded-xl bg-[#8b3cf7] hover:bg-[#7c3aed] disabled:opacity-40 text-white text-sm font-semibold transition-colors"
+              >
+                {posterBusy ? "Uploading..." : "Upload Poster"}
+              </button>
+            )}
+            {posterError && <p className="mt-3 text-sm text-red-400">{posterError}</p>}
           </div>
         </div>
 
