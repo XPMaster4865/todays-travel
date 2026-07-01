@@ -1,11 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import PortalTabs from "@/components/PortalTabs";
 
 type Role = { label: string; colour: string };
 type Session = { globalName: string; roles: Role[] };
-type Entry = { id: string; route: string; note: string; author: string; timestamp: number };
+type Entry = { id: string; route: string; note: string; author: string; timestamp: number; imageKey: string };
 
 const ROUTE_NUMBERS = [
   "1", "2", "3", "4", "5", "6", "7", "8", "13",
@@ -20,11 +20,14 @@ const ROUTE_NUMBERS = [
 
 export default function RouteLog() {
   const router = useRouter();
+  const fileRef = useRef<HTMLInputElement>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [entries, setEntries] = useState<Entry[]>([]);
   const [route, setRoute] = useState(ROUTE_NUMBERS[0]);
   const [note, setNote] = useState("");
+  const [image, setImage] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -42,19 +45,32 @@ export default function RouteLog() {
       .catch(() => setError("Could not load route log history."));
   }, [router]);
 
+  const onFileChange = (file: File | null) => {
+    setImage(file);
+    setPreview(file ? URL.createObjectURL(file) : null);
+  };
+
   const submit = async () => {
+    if (!image) {
+      setError("Please upload a screenshot of the finish screen.");
+      return;
+    }
     setSubmitting(true);
     setError("");
     try {
-      const res = await fetch("/api/routelog/add", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ route, note: note.trim(), author: session?.globalName }),
-      });
+      const form = new FormData();
+      form.append("route", route);
+      form.append("note", note.trim());
+      form.append("author", session?.globalName ?? "Unknown");
+      form.append("image", image);
+
+      const res = await fetch("/api/routelog/add", { method: "POST", body: form });
       const data = await res.json() as { entry?: Entry; error?: string };
       if (data.entry) {
         setEntries((prev) => [data.entry!, ...prev]);
         setNote("");
+        onFileChange(null);
+        if (fileRef.current) fileRef.current.value = "";
       } else {
         setError(data.error ?? "Failed to log route.");
       }
@@ -88,7 +104,7 @@ export default function RouteLog() {
         <div className="rounded-2xl border border-purple-900/40 bg-[#130d24] p-6">
           <h2 className="font-bold text-lg mb-1 text-[#c084fc]">Log a Completed Route</h2>
           <p className="text-xs text-[#f0eaff]/40 mb-4">
-            Record a route you&apos;ve just driven.
+            Record a route you&apos;ve just driven. A screenshot of the finish screen is required.
           </p>
           <div className="flex flex-col gap-3">
             <select
@@ -107,6 +123,21 @@ export default function RouteLog() {
               placeholder="Note (optional)"
               className="bg-[#0f0a1e] border border-purple-900/40 rounded-xl px-4 py-2.5 text-sm text-[#f0eaff] placeholder-[#f0eaff]/20 focus:outline-none focus:border-[#8b3cf7]/60"
             />
+
+            <div>
+              <label className="block text-xs text-[#f0eaff]/40 mb-2">Finish screen screenshot</label>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                onChange={(e) => onFileChange(e.target.files?.[0] ?? null)}
+                className="block w-full text-sm text-[#f0eaff]/70 file:mr-4 file:px-4 file:py-2 file:rounded-xl file:border-0 file:bg-[#8b3cf7] file:text-white file:font-semibold file:cursor-pointer hover:file:bg-[#7c3aed]"
+              />
+              {preview && (
+                <img src={preview} alt="Preview" className="mt-3 rounded-xl border border-purple-900/40 max-h-48" />
+              )}
+            </div>
+
             <button
               onClick={submit}
               disabled={submitting}
@@ -130,19 +161,22 @@ export default function RouteLog() {
           {entries.length === 0 ? (
             <p className="text-[#f0eaff]/40 text-sm">No routes logged yet.</p>
           ) : (
-            <div className="flex flex-col gap-3 max-h-96 overflow-y-auto">
+            <div className="flex flex-col gap-3 max-h-[32rem] overflow-y-auto">
               {entries.map((e) => (
-                <div key={e.id} className="flex items-center justify-between border border-purple-900/20 rounded-xl px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    <div className="shrink-0 w-10 h-10 rounded-lg bg-[#8b3cf7] flex items-center justify-center">
-                      <span className="text-xs font-extrabold text-white">{e.route}</span>
+                <div key={e.id} className="flex items-center gap-3 border border-purple-900/20 rounded-xl px-4 py-3">
+                  <img
+                    src={`/api/routelog/image?key=${encodeURIComponent(e.imageKey)}`}
+                    alt={`Route ${e.route} finish screen`}
+                    className="shrink-0 w-16 h-16 rounded-lg object-cover border border-purple-900/40"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="shrink-0 px-2 py-0.5 rounded bg-[#8b3cf7] text-xs font-extrabold text-white">{e.route}</span>
+                      <p className="font-semibold text-[#f0eaff] truncate">{e.author}</p>
                     </div>
-                    <div>
-                      <p className="font-semibold text-[#f0eaff]">{e.author}</p>
-                      {e.note && <p className="text-xs text-[#f0eaff]/50">{e.note}</p>}
-                    </div>
+                    {e.note && <p className="text-xs text-[#f0eaff]/50 mt-1">{e.note}</p>}
                   </div>
-                  <p className="text-xs text-[#f0eaff]/30">{new Date(e.timestamp).toLocaleString()}</p>
+                  <p className="shrink-0 text-xs text-[#f0eaff]/30">{new Date(e.timestamp).toLocaleString()}</p>
                 </div>
               ))}
             </div>
