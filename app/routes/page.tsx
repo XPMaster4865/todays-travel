@@ -49,7 +49,7 @@ export default function Routes() {
         Our <span className="text-[#2dd4bf]">Routes</span>
       </h1>
       <p className="text-[#f0eaff]/50 text-lg mb-10">
-        All routes currently operated by Todays Travel in Croydon Bus Simulator
+        All custom routes currently operated by Todays Travel in Croydon Bus Simulator
       </p>
 
       {/* Filter buttons */}
