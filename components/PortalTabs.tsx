@@ -8,6 +8,7 @@ type Session = { roles: Role[] };
 const BASE_TABS = [
   { label: "Overview", href: "/portal" },
   { label: "Company Funds", href: "/portal/funds" },
+  { label: "Shifts", href: "/portal/shifts" },
 ];
 
 export default function PortalTabs() {
