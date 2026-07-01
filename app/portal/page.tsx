@@ -232,6 +232,14 @@ function PortalInner() {
               </a>
             </div>
           </div>
+
+          {/* Log out */}
+          <button
+            onClick={logout}
+            className="w-full px-5 py-3 rounded-xl border border-red-700/40 bg-red-900/10 hover:bg-red-900/20 text-red-400 text-sm font-semibold transition-colors"
+          >
+            Log Out
+          </button>
         </div>
       )}
     </div>
