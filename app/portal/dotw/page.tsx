@@ -135,7 +135,7 @@ export default function DotwManage() {
 
         {/* Set champion */}
         <div className="rounded-2xl border border-[#fbbf24]/40 bg-[#130d24] p-6">
-          <h2 className="font-bold text-lg mb-1 text-[#fbbf24]">Current Champion</h2>
+          <h2 className="font-bold text-lg mb-1 text-[#fbbf24]">Current Driver of the Week</h2>
           <p className="text-xs text-[#f0eaff]/40 mb-4">
             Set this once the winner has been given the Driver of the Week role in Discord.
           </p>

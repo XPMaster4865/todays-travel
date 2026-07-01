@@ -51,7 +51,7 @@ export default function DriverOfTheWeek() {
       <div className="flex flex-col gap-6">
         {/* Current champion */}
         <div className="rounded-2xl border border-[#fbbf24]/40 bg-gradient-to-br from-[#fbbf24]/10 to-transparent p-6">
-          <h2 className="font-bold text-[#fbbf24] mb-2">Current Champion</h2>
+          <h2 className="font-bold text-[#fbbf24] mb-2">Current Driver of the Week</h2>
           {state?.championName ? (
             <>
               <p className="text-3xl font-extrabold text-[#f0eaff]">{state.championName}</p>
