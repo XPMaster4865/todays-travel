@@ -8,14 +8,13 @@ interface Env {
 type Entry = {
   id: string;
   balance: number;
-  note: string;
   author: string;
   timestamp: number;
 };
 
 export async function onRequestPost(context: { request: Request; env: Env }) {
   try {
-    const body = await context.request.json() as { balance?: number; note?: string; author?: string };
+    const body = await context.request.json() as { balance?: number; author?: string };
 
     if (typeof body.balance !== "number" || !Number.isFinite(body.balance)) {
       return Response.json({ error: "Invalid balance" }, { status: 400 });
@@ -24,7 +23,6 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
     const entry: Entry = {
       id: crypto.randomUUID(),
       balance: body.balance,
-      note: (body.note ?? "").slice(0, 280),
       author: (body.author ?? "Unknown").slice(0, 64),
       timestamp: Date.now(),
     };

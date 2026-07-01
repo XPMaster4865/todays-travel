@@ -5,7 +5,7 @@ import PortalTabs from "@/components/PortalTabs";
 
 type Role = { label: string; colour: string };
 type Session = { globalName: string; roles: Role[] };
-type Entry = { id: string; balance: number; note: string; author: string; timestamp: number };
+type Entry = { id: string; balance: number; author: string; timestamp: number };
 
 function formatCurrency(n: number) {
   return `${new Intl.NumberFormat("en-GB").format(n)} points`;
@@ -17,7 +17,6 @@ export default function Funds() {
   const [loading, setLoading] = useState(true);
   const [entries, setEntries] = useState<Entry[]>([]);
   const [balance, setBalance] = useState("");
-  const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -44,13 +43,12 @@ export default function Funds() {
       const res = await fetch("/api/funds/log", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ balance: value, note: note.trim(), author: session?.globalName }),
+        body: JSON.stringify({ balance: value, author: session?.globalName }),
       });
       const data = await res.json() as { entry?: Entry; error?: string };
       if (data.entry) {
         setEntries((prev) => [data.entry!, ...prev]);
         setBalance("");
-        setNote("");
       } else {
         setError(data.error ?? "Failed to log entry.");
       }
@@ -89,7 +87,6 @@ export default function Funds() {
               <p className="text-xs text-[#f0eaff]/40 mt-2">
                 Logged by {current.author} · {new Date(current.timestamp).toLocaleString()}
               </p>
-              {current.note && <p className="text-sm text-[#f0eaff]/60 mt-2">{current.note}</p>}
             </>
           ) : (
             <p className="text-[#f0eaff]/40 text-sm">No balance has been logged yet.</p>
@@ -109,13 +106,6 @@ export default function Funds() {
               value={balance}
               onChange={(e) => setBalance(e.target.value)}
               placeholder="Points (e.g. 1250)"
-              className="bg-[#0f0a1e] border border-purple-900/40 rounded-xl px-4 py-2.5 text-sm text-[#f0eaff] placeholder-[#f0eaff]/20 focus:outline-none focus:border-[#8b3cf7]/60"
-            />
-            <input
-              type="text"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="Note (optional)"
               className="bg-[#0f0a1e] border border-purple-900/40 rounded-xl px-4 py-2.5 text-sm text-[#f0eaff] placeholder-[#f0eaff]/20 focus:outline-none focus:border-[#8b3cf7]/60"
             />
             <button
@@ -138,10 +128,7 @@ export default function Funds() {
             <div className="flex flex-col gap-3 max-h-96 overflow-y-auto">
               {entries.map((e) => (
                 <div key={e.id} className="flex items-center justify-between border border-purple-900/20 rounded-xl px-4 py-3">
-                  <div>
-                    <p className="font-semibold text-[#f0eaff]">{formatCurrency(e.balance)}</p>
-                    {e.note && <p className="text-xs text-[#f0eaff]/50">{e.note}</p>}
-                  </div>
+                  <p className="font-semibold text-[#f0eaff]">{formatCurrency(e.balance)}</p>
                   <div className="text-right">
                     <p className="text-xs text-[#f0eaff]/40">{e.author}</p>
                     <p className="text-xs text-[#f0eaff]/30">{new Date(e.timestamp).toLocaleString()}</p>
